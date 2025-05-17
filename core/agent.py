@@ -6,16 +6,20 @@ from tools import tools
 from langgraph.prebuilt import ToolNode
 
 
+
 class State(TypedDict):
     messages: Annotated[list, add_messages]
 
-def get_agent(modelname):
-    llm = get_llm(modelname)
-    llm_with_tools = llm.bind_tools(tools)
 
-    def chatbot(state: State):
-        return {"messages": [llm_with_tools.invoke(state["messages"])]}
+class AgentBuilder:
+    def __init__(self, modelname: str):
+        self.llm = get_llm(modelname)
+        self.llm_with_tools = self.llm.bind_tools
 
-    tool_node = ToolNode(tools=tools)
+    def get_agent(self):
+        def chatbot(state: State):
+            return {"messages": [self.llm_with_tools.invoke(state["messages"])]}
 
-    return chatbot, tool_node
+        tool_node = ToolNode(tools=tools)
+
+        return chatbot, tool_node

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from core import Chat
+from core import ChatBuilder
 import logging
 
 
@@ -15,7 +15,7 @@ class ChatRequest(BaseModel):
     mode: str = "stream"
 
 # 全局单例
-chat_engine = Chat(modelname="mistralai/mistral-small-3.1-24b-instruct:free", mode="stream")
+chat_engine = ChatBuilder(modelname="mistralai/mistral-small-3.1-24b-instruct:free", mode="stream")
 
 @router.post("/chat")
 def chat_api(request: ChatRequest):
