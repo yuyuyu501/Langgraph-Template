@@ -14,7 +14,7 @@ class State(TypedDict):
 class AgentBuilder:
     def __init__(self, modelname: str):
         self.llm = get_llm(modelname)
-        self.llm_with_tools = self.llm.bind_tools
+        self.llm_with_tools = self.llm.bind_tools(tools=tools)
 
     def get_agent(self):
         def chatbot(state: State):

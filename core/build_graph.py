@@ -3,6 +3,7 @@ from langgraph.prebuilt import tools_condition
 from databases.memory import memory
 from .agent import *
 import logging
+from IPython.display import Image, display
 
 
 class GraphBuilder:
@@ -40,9 +41,15 @@ class GraphBuilder:
         try:
             self._add_node()
             self._add_edge()
-            graph = self.graph_builder.compile(checkpointer=memory)
+            self.graph = self.graph_builder.compile(checkpointer=memory)
             logging.info("Graph构建完成")
-            return graph
+            return self.graph
         except Exception as e:
             logging.error(f"Graph构建失败: {e}", exc_info=True)
             raise
+
+    def show_graph(self):
+        try:
+            display(Image(self.graph.get_graph().draw_mermaid_png()))
+        except Exception as e:
+            logging.error(f"graph可视化失败: {e}", exc_info=True)
